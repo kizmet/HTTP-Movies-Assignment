@@ -1,29 +1,27 @@
-import React, { Component } from 'react';
-import { NavLink, Link } from 'react-router-dom';
-export default class SavedList extends Component {
-  constructor(props) {
-    super(props);
-  }
+import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 
-  render() {
-    return (
-      <div className="saved-list">
-        <h3>Saved Movies:</h3>
-        {this.props.list.map(movie => {
-          return (
-            <NavLink
-              to={`/movies/${movie.id}`}
-              key={movie.id}
-              activeClassName="saved-active"
-            >
-              <span className="saved-movie">{movie.title}</span>
+const SavedList = props => {
+  return (
+    <div className="saved-list">
+      <h3>Saved Movies:</h3>
+      {props.list.map(movie => (
+        <div className="saved-movie" key={movie.id}>
+          
+<NavLink to={`/movies/${movie.id}`} key={movie.id} activeClassName="saved-active">
+            <div className="saved-movie">{movie.title}</div>
             </NavLink>
-          );
-        })}
-        <div className="home-button">
-          <Link to="/">Home</Link>
+
+            
+        
+          <div onClick={() => props.removeFromSavedList(movie.id)}>X </div>
         </div>
-      </div>
-    );
-  }
-}
+      ))}
+      <Link to={`/`}>
+        <div className="home-button">Home</div>
+      </Link>
+    </div>
+  );
+};
+
+export default SavedList;

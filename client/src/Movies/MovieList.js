@@ -1,37 +1,35 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import MovieCard from "./MovieCard";
-export default class MovieList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      movies: []
+import Movie from "./Movie";
+
+const MovieList = props => {
+  const [movies, setMovies] = useState([]);
+  useEffect(() => {
+    const getMovies = () => {
+      axios
+        .get("http://localhost:5000/api/movies")
+        .then(response => {
+          setMovies(response.data);
+        })
+        .catch(error => {
+          console.error("Server Error", error);
+        });
     };
-  }
 
-  componentDidMount() {
-    axios
-      .get("http://localhost:5000/api/movies")
-      .then(res => this.setState({ movies: res.data }))
-      .catch(err => console.log(err.response));
-  }
+    getMovies();
+  }, []);
 
-  render() {
-    return (
-      <div className="movie-list">
-        {this.state.movies.map(movie => (
-          <MovieDetails key={movie.id} movie={movie} />
-        ))}
-      </div>
-    );
-  }
-}
-
-function MovieDetails({ movie }) {
   return (
-    <Link to={`/movies/${movie.id}`}>
-      <MovieCard movie={movie} />
-    </Link>
+    <div className="movie-list">
+      {movies.map(movie => (
+        <Link to={`/movies/${movie.id}`} key={movie.id} setMovies={setMovies} movies={movies} >
+          <MovieCard key={movie.id} movie={movie} setMovies={setMovies} />
+        </Link>
+      ))}
+    </div>
   );
-}
+};
+
+export default MovieList;
